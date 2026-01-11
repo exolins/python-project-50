@@ -1,11 +1,9 @@
 import argparse
-parser = argparse.ArgumentParser()
-parser.parse_args()
 
 
 def main():
     print("Hello from python-project-50!")
 
+    parser = argparse.ArgumentParser()
+    parser.parse_args()
 
-if __name__ == "__main__":
-    main()
