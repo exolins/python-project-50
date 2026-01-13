@@ -8,20 +8,56 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+        # make depends on uv
+      - name: Install dependencies
+        run: |
+          pip install uv
+          make install
+      - name: Run linter and pytest
+        run: |
+          make check
+      - name: Run test coverage
+        run: |
+          make test-coverage
+      - name: SonarQubeScan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # with:
+        #   args: >
+        #     -Dsonar.projectKey=hexlet-boilerplates_python-package
+        #     -Dsonar.organization=hexlet-boilerplates
+        #     -Dsonar.python.coverage.reportPaths=coverage.xml
+  # sonarqube:
+  #   name: SonarQube
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+  #     - name: SonarQube Scan
+  #       uses: SonarSource/sonarqube-scan-action@v6
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+   # build:
 
-    - name: configure
-      run: ./configure
+  #   runs-on: ubuntu-latest
 
-    - name: Install dependencies
-      run: make
+  #   steps:
+  #   - uses: actions/checkout@v4
 
-    - name: Run check
-      run: make check
+  #   - name: run setup
+  #     run: make setup
 
-    - name: Run distcheck
-      run: make distcheck
+  #   - name: run tests
+  #     run: make test
+
+  #   - name: Run linter
+  #     run: make lint
