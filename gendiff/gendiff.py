@@ -15,8 +15,11 @@ def generate_diff(dic1, dic2):
         | {f"- {k}": v for (k, v) in removed}
         | {f"  {k}": v for (k, v) in common}
     )
+    list_result = list(result.items())
 
-    return result
+    return sorted(list_result, key=lambda item: item[0][3:])
+    # return result
+    # return list_result
 
 
 def generate_diff_old(file1, file2):
