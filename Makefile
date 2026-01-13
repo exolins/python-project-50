@@ -3,7 +3,8 @@ install:
 
 run:
 	uv run gendiff
-
+run-files:
+	uv run gendiff gendiff/tests/test_data/file1.json gendiff/tests/test_data/file2.json
 test:
 	uv run pytest
 

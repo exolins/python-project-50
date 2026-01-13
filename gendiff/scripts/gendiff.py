@@ -1,4 +1,4 @@
-from gendiff.gendiff import file_diff, read_json, parse_sh_args
+from gendiff.gendiff import generate_diff, read_json, parse_sh_args
 
 
 def main():
@@ -12,7 +12,5 @@ def main():
     second_file = args.second_file
     file1 = read_json(first_file)
     file2 = read_json(second_file)
-    result = file_diff(file1, file2)
+    result = generate_diff(file1, file2)
     return result
-
-                    

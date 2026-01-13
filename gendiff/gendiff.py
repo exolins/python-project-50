@@ -3,25 +3,44 @@
 import argparse
 import json
 
-def file_diff(file1, file2):
+
+def generate_diff(dic1, dic2):
+    set1 = set(dic1.items())
+    set2 = set(dic2.items())
+    common = set1 & set2
+    removed = set1 - set2
+    added = set2 - set1
+    result = (
+        {f"+ {k}": v for (k, v) in added}
+        | {f"- {k}": v for (k, v) in removed}
+        | {f"  {k}": v for (k, v) in common}
+    )
+
+    return result
+
+
+def generate_diff_old(file1, file2):
     result = []
     for k in file1:
         if k in file2:
             if file2[k] == file1[k]:
-                result.append([' ', k, file1[k]])
+                result.append([" ", k, file1[k]])
             else:
-                result.append(['-', k, file1[k]])
-                result.append(['+', k, file2[k]])
+                result.append(["-", k, file1[k]])
+                result.append(["+", k, file2[k]])
         else:
-            result.append(['-', k, file1[k]])
+            result.append(["-", k, file1[k]])
     sorted_list = sorted(result, key=lambda l: l[1])
     string_list = [str(item) for item in sorted_list]
     # print('\n'.join(string_list))
     # print(result)
-    return '\n'.join(string_list)
+    return "\n".join(string_list)
+
 
 def read_json(file_path):
     return json.load(open(file_path))
+
+
 # def file_get():
 #     file = read_json('gendiff')
 # class Diff:
@@ -36,16 +55,18 @@ def read_json(file_path):
 #     def __contains__(self, val):
 #         return self.key == val
 
-def parse_sh_args():
 
+def parse_sh_args():
     parser = argparse.ArgumentParser(
-                    prog='gendiff',
-                    description='Compares two configuration files and shows a difference.',
-                    epilog='Text at the bottom of help')
-    parser.add_argument("-f","--format", help="set format of output")
+        prog="gendiff",
+        description="Compares two configuration files and shows a difference.",
+        epilog="Text at the bottom of help",
+    )
+    parser.add_argument("-f", "--format", help="set format of output")
     parser.add_argument("first_file")
     parser.add_argument("second_file")
     return parser.parse_args()
+
 
 # def main():
 
