@@ -20,17 +20,17 @@ def read_file(filename):
     return get_test_data_path(filename).read_text()
 
 
-def write_file():
-    out = open(get_test_data_path('result.txt'), 'w')
+# def write_file():
+#     out = open(get_test_data_path('result.txt'), 'w')
 
-    file1 = get_test_data_path('file1.json')
-    file2 = get_test_data_path('file2.json')
-    file1 = read_json(file1)
-    file2 = read_json(file2)
-    # expected = read_file('result.txt')
-    actual = generate_diff(file1, file2)
-    out.write(actual)
-    out.close()
+#     file1 = get_test_data_path('file1.json')
+#     file2 = get_test_data_path('file2.json')
+#     file1 = read_json(file1)
+#     file2 = read_json(file2)
+#     # expected = read_file('result.txt')
+#     actual = generate_diff(file1, file2)
+#     out.write(actual)
+#     out.close()
     
 # def test_write():
 #     write_file()
