@@ -2,7 +2,7 @@ from gendiff.gendiff import generate_diff, read_json, parse_sh_args
 
 
 def main():
-    print("Hello from python-project-50!")
+    # print("Hello from python-project-50!")
 
     args = parse_sh_args()
     # print(args)

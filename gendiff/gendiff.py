@@ -16,10 +16,12 @@ def generate_diff(dic1, dic2):
         | {f"  {k}": v for (k, v) in common}
     )
     list_result = list(result.items())
+    list_result.sort(key=lambda item: item[0][2:])
 
-    return sorted(list_result, key=lambda item: item[0][3:])
+    string_list = [str(f'{item[0]}: {item[1]}') for item in list_result]
+    # return sorted(list_result, key=lambda item: item[0][3:])
     # return result
-    # return list_result
+    return "\n".join(string_list)
 
 
 def generate_diff_old(file1, file2):
