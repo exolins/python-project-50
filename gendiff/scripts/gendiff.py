@@ -1,4 +1,4 @@
-from gendiff.gendiff import generate_diff, read_json, parse_sh_args
+from gendiff.gendiff import generate_diff, parse_sh_args, read_json
 
 
 def main():

@@ -1,17 +1,25 @@
 # diff_test
-from gendiff.gendiff import generate_diff
-from gendiff.gendiff import read_json
 from pathlib import Path
+
+from gendiff.gendiff import generate_diff, read_json
+
+
 def get_test_data_path(filename):
     return Path(__file__).parent / "test_data" / filename
+
+
 result_from = '''- follow: False
   host: hexlet.io
 - proxy: 123.234.53.22
 + timeout: 20
 - timeout: 50
 + verbose: True'''
+
+
 def read_file(filename):
     return get_test_data_path(filename).read_text()
+
+
 def write_file():
     out = open(get_test_data_path('result.txt'), 'w')
 

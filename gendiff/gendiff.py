@@ -1,4 +1,4 @@
-# gendiff main
+# gendiff main module
 
 import argparse
 import json
@@ -35,7 +35,7 @@ def generate_diff_old(file1, file2):
                 result.append(["+", k, file2[k]])
         else:
             result.append(["-", k, file1[k]])
-    sorted_list = sorted(result, key=lambda l: l[1])
+    sorted_list = sorted(result, key=lambda key: key[1])
     string_list = [str(item) for item in sorted_list]
     # print('\n'.join(string_list))
     # print(result)
