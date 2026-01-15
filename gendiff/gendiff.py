@@ -1,7 +1,6 @@
 # gendiff main module
 
-import argparse
-import json
+# from gendiff.json_loader import read_json
 
 
 def generate_diff(dic1, dic2):
@@ -18,32 +17,28 @@ def generate_diff(dic1, dic2):
     list_result = list(result.items())
     list_result.sort(key=lambda item: item[0][2:])
 
-    string_list = [str(f'{item[0]}: {item[1]}') for item in list_result]
+    string_list = [str(f"{item[0]}: {item[1]}") for item in list_result]
     # return sorted(list_result, key=lambda item: item[0][3:])
     # return result
     return "\n".join(string_list)
 
 
-def generate_diff_old(file1, file2):
-    result = []
-    for k in file1:
-        if k in file2:
-            if file2[k] == file1[k]:
-                result.append([" ", k, file1[k]])
-            else:
-                result.append(["-", k, file1[k]])
-                result.append(["+", k, file2[k]])
-        else:
-            result.append(["-", k, file1[k]])
-    sorted_list = sorted(result, key=lambda key: key[1])
-    string_list = [str(item) for item in sorted_list]
-    # print('\n'.join(string_list))
-    # print(result)
-    return "\n".join(string_list)
-
-
-def read_json(file_path):
-    return json.load(open(file_path))
+# def generate_diff_old(file1, file2):
+#     result = []
+#     for k in file1:
+#         if k in file2:
+#             if file2[k] == file1[k]:
+#                 result.append([" ", k, file1[k]])
+#             else:
+#                 result.append(["-", k, file1[k]])
+#                 result.append(["+", k, file2[k]])
+#         else:
+#             result.append(["-", k, file1[k]])
+#     sorted_list = sorted(result, key=lambda key: key[1])
+#     string_list = [str(item) for item in sorted_list]
+#     # print('\n'.join(string_list))
+#     # print(result)
+#     return "\n".join(string_list)
 
 
 # def file_get():
@@ -59,18 +54,6 @@ def read_json(file_path):
 #         return f'{self.status} {self.key} {self.value}'
 #     def __contains__(self, val):
 #         return self.key == val
-
-
-def parse_sh_args():
-    parser = argparse.ArgumentParser(
-        prog="gendiff",
-        description="Compares two configuration files and shows a difference.",
-        epilog="Text at the bottom of help",
-    )
-    parser.add_argument("-f", "--format", help="set format of output")
-    parser.add_argument("first_file")
-    parser.add_argument("second_file")
-    return parser.parse_args()
 
 
 # def main():
