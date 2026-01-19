@@ -1,8 +1,9 @@
 # diff_test
 # from pathlib import Path
 
-from gendiff.gendiff import generate_diff
+from gendiff.gendiff import *
 
+# from gendiff.gendiff import make_tree
 from gendiff.file_read import read_file
 
 file_path_result = "gendiff/tests/test_data/result.txt"
@@ -10,6 +11,7 @@ file_path_json_1 = "gendiff/tests/test_data/file1.json"
 file_path_yaml_1 = "gendiff/tests/test_data/file1.yaml"
 file_path_json_2 = "gendiff/tests/test_data/file2.json"
 file_path_yaml_2 = "gendiff/tests/test_data/file2.yaml"
+file_path_nested_json_1 = "gendiff/tests/test_data/nested_file1.json"
 
 result_from = """- follow: False
   host: hexlet.io
@@ -22,8 +24,16 @@ result_from = """- follow: False
 def test_file_diff_json():
     file1 = read_file(file_path_json_1)
     file2 = read_file(file_path_json_2)
+    file_nested = read_file(file_path_nested_json_1)
     expected = open(file_path_result).read()
     actual = generate_diff(file1, file2)
+    test_tree = make_tree(file_nested)
+    print("#########TEST############")
+    print(test_tree)
+    nodes1 = filter(is_node, test_tree)
+    print(list(nodes1))
+    assert test_tree == "123"
+
     assert actual == result_from
     assert actual == expected
 
@@ -59,4 +69,4 @@ def test_file_diff_yaml():
 
 
 # def read_file_as_is(filename):
-#     return get_test_data_path(filename).read_text()
+#     return get_test_data_path(filename).read_text(

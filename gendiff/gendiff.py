@@ -23,6 +23,40 @@ def generate_diff(dic1, dic2):
     return "\n".join(string_list)
 
 
+def is_node(item):
+    if item["type"] == "dict":
+        return True
+    return False
+
+
+def new_diff(dic1, dic2):
+    nodes1 = filter(is_node, dic1)
+    nodes2 = filter(is_node, dic2)
+    keys = nodes1.keys() | nodes2.keys()
+    for key in keys:
+        result = nodes
+    result = {}
+    for key in leaves2:
+        result[key] = result.get(key, {}) | leaves1[key]
+
+
+def make_tree(data, status="old"):
+    result = {}
+
+    def iter_(value):
+        if isinstance(value, dict):
+            return {
+                "type": "dict",
+                "childrens": make_tree(value),
+                "status": status,
+            }
+        return {"type": "val", "old_value": value}
+
+    for key, value in data.items():
+        result[key] = iter_(value)
+    return result
+
+
 # def generate_diff_old(file1, file2):
 #     result = []
 #     for k in file1:
