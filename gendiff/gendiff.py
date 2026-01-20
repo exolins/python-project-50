@@ -57,7 +57,9 @@ def merge_diff(dic1, dic2):
         if is_node(item1) and is_node(item2):
             return {
                 "version": -1,
-                "childrens": merge_diff(get_childrens(item1), get_childrens(item2)),
+                "childrens": merge_diff(
+                    get_childrens(item1), get_childrens(item2)
+                ),
             }
         return [item1, item2]
 
