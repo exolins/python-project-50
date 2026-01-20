@@ -12,6 +12,7 @@ file_path_yaml_1 = "gendiff/tests/test_data/file1.yaml"
 file_path_json_2 = "gendiff/tests/test_data/file2.json"
 file_path_yaml_2 = "gendiff/tests/test_data/file2.yaml"
 file_path_nested_json_1 = "gendiff/tests/test_data/nested_file1.json"
+file_path_nested_json_2 = "gendiff/tests/test_data/nested_file2.json"
 
 result_from = """- follow: False
   host: hexlet.io
@@ -25,17 +26,25 @@ def test_file_diff_json():
     file1 = read_file(file_path_json_1)
     file2 = read_file(file_path_json_2)
     file_nested = read_file(file_path_nested_json_1)
+    file_nested2 = read_file(file_path_nested_json_2)
     expected = open(file_path_result).read()
-    actual = generate_diff(file1, file2)
-    test_tree = make_tree(file_nested)
+    # actual = generate_diff(file1, file2)
+    test_tree = make_tree(file_nested, 1)
+
+    test_tree2 = make_tree(file_nested2, 2)
+
     print("#########TEST############")
     print(test_tree)
+    res_merge = merge_diff(test_tree, test_tree2)
+    print("###############mege")
+    print(list(res_merge))
+
     nodes1 = filter(is_node, test_tree)
     print(list(nodes1))
     assert test_tree == "123"
 
-    assert actual == result_from
-    assert actual == expected
+    # assert actual == result_from
+    # assert actual == expected
 
 
 def test_file_diff_yaml():

@@ -24,33 +24,70 @@ def generate_diff(dic1, dic2):
 
 
 def is_node(item):
-    if item["type"] == "dict":
+    if not isinstance(item, dict):
+        return False
+    if item.get("type", "") == "dict":
         return True
     return False
 
 
-def new_diff(dic1, dic2):
-    nodes1 = filter(is_node, dic1)
-    nodes2 = filter(is_node, dic2)
-    keys = nodes1.keys() | nodes2.keys()
-    for key in keys:
-        result = nodes
+def flat_diff(dic1, dic2):
+    result = dic1.copy()
+    for key in dic2:
+        result[key] = result.get(key, {}) | dic2[key]
+    return result
+
+
+def get_version(item):
+    return item.get("version", 0)
+
+
+def get_value(item):
+    return item.get("value", "")
+
+
+def get_childrens(item):
+    return item.get("childrens", {})
+
+
+def merge_diff(dic1, dic2):
     result = {}
-    for key in leaves2:
-        result[key] = result.get(key, {}) | leaves1[key]
+
+    def iter_(item1, item2):
+        if is_node(item1) and is_node(item2):
+            return {
+                "version": -1,
+                "childrens": merge_diff(get_childrens(item1), get_childrens(item2)),
+            }
+        return [item1, item2]
+
+    result = dic1.copy()
+    for key in dic2:
+        result[key] = iter_(result.get(key, ""), dic2[key])
+    return result
 
 
-def make_tree(data, status="old"):
+# def new_diff(dic1, dic2):
+#     nodes1 = filter(is_node, dic1)
+#     nodes2 = filter(is_node, dic2)
+#     keys = nodes1.keys() | nodes2.keys()
+#     for key in keys:
+#         result = nodes
+#     result = {}
+#     for key in leaves2:
+#         result[key] = result.get(key, {}) | leaves1[key]
+
+
+def make_tree(data, version):
     result = {}
 
     def iter_(value):
         if isinstance(value, dict):
             return {
-                "type": "dict",
-                "childrens": make_tree(value),
-                "status": status,
+                "version": version,
+                "childrens": make_tree(value, version),
             }
-        return {"type": "val", "old_value": value}
+        return {"version": version, "value": value}
 
     for key, value in data.items():
         result[key] = iter_(value)
