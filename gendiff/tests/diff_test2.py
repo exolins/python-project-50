@@ -2,7 +2,7 @@
 # from pathlib import Path
 
 # from gendiff.gendiff import *
-from gendiff.genfunc import *
+from gendiff.gendiff import stringify, generate_diff
 
 # from gendiff.gendiff import make_tree
 from gendiff.file_read import read_file
@@ -28,13 +28,9 @@ def test_file_diff_new():
     file2 = read_file(file_path_json_2)
     file_nested = read_file(file_path_nested_json_1)
     file_nested2 = read_file(file_path_nested_json_2)
-    tree = make_tree(file_nested)
-    tree2 = make_tree(file_nested2)
-    branch1 = get_branches(tree)
-    print(tree)
-    print("##########tree2")
-    print(tree2)
-    print("##########branch")
-    print(list(branch1))
-
-    assert tree == {}
+    diff1 = generate_diff(file1, file2)
+    string1 = stringify(diff1)
+    diff_nested = generate_diff(file_nested, file_nested2)
+    string2 = stringify(diff_nested)
+    assert string1 == result_from
+    assert string2 == result_from
