@@ -6,6 +6,8 @@ from gendiff.gendiff import *
 # from gendiff.gendiff import make_tree
 from gendiff.file_read import read_file
 
+from gendiff.gendiff import Node
+
 
 def get_test_data_path(filename):
     return Path(__file__).parent / "test_data" / filename
@@ -13,6 +15,25 @@ def get_test_data_path(filename):
 
 def read_file(filename):
     return get_test_data_path(filename).read_text()
+
+
+def gendiff(dict1, dict2, format):
+    match format:
+        case "plain":
+            return diff(dict1, dict2).plain()
+        case "stylish":
+            return diff(dict1, dict2).slylish()
+
+
+def diff_test():
+    dict1 = {"option1": "value1"}
+    dict2 = {"option1": "value2"}
+    assert diff(dict1, dict2) == []
+
+
+def note_test():
+    node = Node("key1", NEW, "old1", "new1")
+    assert node == resulte
 
 
 dict1 = {"option1": "value1"}

@@ -5,10 +5,12 @@
 import itertools
 from collections import namedtuple
 
-Node = namedtuple("Node", ("key", "marker", "value"))
+Node = namedtuple("Node", ("key", "marker", "old_value", "new_value"))
+Branch = namedtuple("Branch", ("key", "marker", "childrens"))
 NEW = "+ "
 REMOVED = "- "
 SAME = "  "
+UPDATED = "+\n-"
 
 
 def stringify(value, replacer=" ", spaces_count=1):
@@ -26,6 +28,31 @@ def stringify(value, replacer=" ", spaces_count=1):
             )
         result = itertools.chain("{", lines, [current_indent + "}"])
         return "\n".join(result)
+
+    return iter_(value, 0)
+
+
+def plain_print(value, replacer=" ", spaces_count=1):
+    def iter_(current_value, depth):
+        if not isinstance(current_value, list):
+            return str(current_value)
+
+        deep_indent_size = depth + spaces_count
+        deep_indent = replacer * deep_indent_size
+        current_indent = replacer * depth
+
+        lines = []
+        for node in current_value:
+            lines.append(
+                f"{deep_indent}{node.marker}{node.key}: {iter_(node.value, deep_indent_size)}"
+                f"{deep_indent}{node.marker}{node.key}: {iter_(node.value, parents)}"
+            )
+        result = itertools.chain("{", lines, [current_indent + "}"])
+        return "\n".join(result)
+
+    def iter_(current_value, parents):
+        if not isinstance(current_value, list):
+            return str(current_value)
 
     return iter_(value, 0)
 
@@ -62,11 +89,11 @@ def make_diff(dict1: dict, dict2: dict):
                 result.append(Node(key, NEW, branch(second)))
             case (first, second) if first == second:
                 result.append(Node(key, SAME, first))
-            case (first, second) if first == None:
+            case (first, second) if first is None:
                 result.append(Node(key, NEW, first))
-            case (first, second) if second == None:
+            case (first, second) if second is None:
                 result.append(Node(key, REMOVED, first))
-            case (first, second) if first != None and first != second:
+            case (first, second) if first is not None and first != second:
                 result.append(Node(key, REMOVED, first))
                 result.append(Node(key, NEW, second))
     return result
