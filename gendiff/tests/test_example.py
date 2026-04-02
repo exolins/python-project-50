@@ -20,6 +20,14 @@ DiffDict = namedtuple(
 # data1 = {"key1": "value1"}
 # data2 = {"key1": "value2"}
 # data_result = {"key1": (True, True, "value1", "value2", "updated", {})}
+def make_diff_dict(key, data1, data2):
+    result = DiffDict()
+    result.has_first_value = key in data1
+    result.has_second_value = key in data2
+    result.first_is_dict = isinstance(data1.get(key), dict)
+    result.second_is_dict = isinstance(data2.get(key), dict)
+    if result.fitst_is_dict
+    
 def make_result(key, data1, data2):
     flag1 = key in data1
     flag2 = key in data2
