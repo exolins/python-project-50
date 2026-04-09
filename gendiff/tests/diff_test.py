@@ -1,54 +1,69 @@
-# diff_test
-from pathlib import Path
+import pytest
 
-from gendiff.gendiff import *
+REM = 0
+ADD = 1
+SAME = 2
+UPD = 3
+NEST = 4
+param1 = ({}, {}, {})
+param2 = ({"one": "value1"}, {"one": "value1"}, {"one": (SAME, "value1")})
 
-# from gendiff.gendiff import make_tree
-from gendiff.file_read import read_file
-
-
-def get_test_data_path(filename):
-    return Path(__file__).parent / "test_data" / filename
-
-
-def read_file(filename):
-    return get_test_data_path(filename).read_text()
+param3 = ({"one": "value1"}, {"one": "value2"}, {"one": (UPD, "value1", "value2")})
 
 
-dict1 = {"option1": "value1"}
-dict2 = {"option1": "value2"}
-result_plain = "Property 'option' was updated. From 'value1' to 'value2'"
+param4 = (
+    {"one": "value1"},
+    {"two": "value2"},
+    {"one": (REM, "value1"), "two": (ADD, "value2")},
+)
 
-result_stylish = """
-    - option1: 'value1'
-    + option1: 'value2'
-"""
-
-dict11 = {
-    "opt1": "value1",
-    "opt2": "value2",
-    "opt3": {"nest1": "nest_val1", "nest2": "nest_val2"},
-}
-dict21 = {"opt1": "value1_new", "opt4": "value4", "opt3": "value_str"}
-result_plain2 = """
-    Property 'opt1' was updated. From 'value1' to 'value2'
-    Property 'opt2' was removed.
-    Property 'opt3' was updated. From [complex value] to 'value_str'
-    Property 'opt4 was added with value: 'value4' 
-"""
-result_stylish2 = """
-    - opt1: 'value1'
-    + opt1: 'value2'
-    - opt2: 'value2'
-    - opt3: {
-        nest1: 'nest_val1'
-        nest2: 'nest_val1'
-    }
-    + opt3: 'value_str'
-    + opt4: 'value4'
-"""
+param5 = (
+    {"one": "value1", "two": {"nested": "value1"}},
+    {"one": "value2", "two": {"nested": "value2"}},
+    {"one": (UPD, "value1", "value2"), "two": (NEST, {"nested": (UPD, "value1", "value2")})},
+)
+param6 = (
+    {"one": "value1", "two": {"nested": "value1"}},
+    {"one": "value2", "two": "notnested"},
+    {"one": (UPD, "value1", "value2"), "two": (UPD, {"nested": "value1"}, "notnested")},
+)
+param7 = (
+    {"one": "value1", "two": {"nested": "value1"}},
+    {"lol": "value2", "new": {"nested": "value2"}},
+    {
+        "one": (REM, "value1"),
+        "two": (REM, {"nested": "value1"}),
+        "lol": (ADD, "value2"),
+        "new": (ADD, {"nested": "value2"}),
+    },
+)
 
 
-def first_test():
-    assert generate_diff(file1, file2, "stylish") == stylish_result
-    assert generate_diff(file1, file2, "flat") == flat_result
+def diff(data1: dict, data2: dict):
+    keys = data1.keys() | data2.keys()
+    result = {}
+    for key in keys:
+        flag1 = key in data1
+        flag2 = key in data2
+        match flag1, flag2:
+            case True, False:
+                result[key] = (REM, data1[key])
+            case False, True:
+                result[key] = (ADD, data2[key])
+            case True, True:
+                if isinstance(data1[key], dict) and isinstance(data2[key], dict):
+                    result[key] = (NEST, diff(data1[key], data2[key]))
+                else:
+                    if data1[key] == data2[key]:
+                        result[key] = (SAME, data1[key])
+                    else:
+                        result[key] = (UPD, data1[key], data2[key])
+    return result
+
+
+@pytest.mark.parametrize(
+    "data1, data2, data_result",
+    [param1, param2, param3, param4, param5, param6, param7],
+)
+def test_diff(data1, data2, data_result):
+    assert diff(data1, data2) == data_result
