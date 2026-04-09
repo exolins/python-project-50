@@ -1,10 +1,13 @@
 import pytest
+from gendiff import diff
 
-REM = 0
-ADD = 1
-SAME = 2
-UPD = 3
-NEST = 4
+# from gendiff.diff import *
+
+REM = "rem"
+ADD = "add"
+SAME = "same"
+UPD = "upd"
+NEST = "nest"
 param1 = ({}, {}, {})
 param2 = ({"one": "value1"}, {"one": "value1"}, {"one": (SAME, "value1")})
 
@@ -20,7 +23,10 @@ param4 = (
 param5 = (
     {"one": "value1", "two": {"nested": "value1"}},
     {"one": "value2", "two": {"nested": "value2"}},
-    {"one": (UPD, "value1", "value2"), "two": (NEST, {"nested": (UPD, "value1", "value2")})},
+    {
+        "one": (UPD, "value1", "value2"),
+        "two": (NEST, {"nested": (UPD, "value1", "value2")}),
+    },
 )
 param6 = (
     {"one": "value1", "two": {"nested": "value1"}},
@@ -37,28 +43,6 @@ param7 = (
         "new": (ADD, {"nested": "value2"}),
     },
 )
-
-
-def diff(data1: dict, data2: dict):
-    keys = data1.keys() | data2.keys()
-    result = {}
-    for key in keys:
-        flag1 = key in data1
-        flag2 = key in data2
-        match flag1, flag2:
-            case True, False:
-                result[key] = (REM, data1[key])
-            case False, True:
-                result[key] = (ADD, data2[key])
-            case True, True:
-                if isinstance(data1[key], dict) and isinstance(data2[key], dict):
-                    result[key] = (NEST, diff(data1[key], data2[key]))
-                else:
-                    if data1[key] == data2[key]:
-                        result[key] = (SAME, data1[key])
-                    else:
-                        result[key] = (UPD, data1[key], data2[key])
-    return result
 
 
 @pytest.mark.parametrize(
