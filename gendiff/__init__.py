@@ -4,6 +4,7 @@ from .source.arg_parser import parse_sh_args
 from .scripts.gendiff import generate_diff
 
 __all__ = [
+    "diff",
     "generate_diff",
     "stylish_view",
     "plain_view",
