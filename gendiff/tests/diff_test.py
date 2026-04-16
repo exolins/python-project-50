@@ -1,6 +1,6 @@
 import pytest
 
-from gendiff import *
+from gendiff import make_diff
 
 param1 = ({}, {}, {})
 param2 = (
@@ -90,4 +90,4 @@ param7 = (
     [param1, param2, param3, param4, param5, param6, param7],
 )
 def test_diff(data1, data2, data_result):
-    assert diff(data1, data2) == data_result
+    assert make_diff(data1, data2) == data_result

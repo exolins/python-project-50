@@ -49,7 +49,7 @@ def stylish_view(value, replacer=" ", spaces_count=4):
     return iter_(value, 1, True)
 
 
-def diff(dict1, dict2):
+def make_diff(dict1, dict2):
     keys = dict1.keys() | dict2.keys()
     result = {}
     for key in keys:
@@ -60,7 +60,7 @@ def diff(dict1, dict2):
         elif isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
             result[key] = {
                 "type": "node",
-                "childrens": diff(dict1[key], dict2[key]),
+                "childrens": make_diff(dict1[key], dict2[key]),
             }
         elif dict1[key] != dict2[key]:
             result[key] = {
@@ -92,7 +92,7 @@ def plain_view(diff_value, parent=""):
                 case "added":
                     lines.append(
                         f"Property {full_name}"
-                        + f"was added with value: "
+                        + "was added with value: "
                         + f"{complex_val(value_inner['value'])}"
                     )
                 case "updated":

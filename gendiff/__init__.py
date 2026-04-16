@@ -1,10 +1,9 @@
-from .scripts.gendiff import generate_diff
 from .source.arg_parser import parse_sh_args
-from .source.diff import diff, json_view, plain_view, stylish_view
-from .source.file_read import read_file
+from .source.file_tools import read_file
+from .source.main_diff import json_view, make_diff, plain_view, stylish_view
 
 __all__ = [
-    "diff",
+    "make_diff",
     "generate_diff",
     "stylish_view",
     "plain_view",

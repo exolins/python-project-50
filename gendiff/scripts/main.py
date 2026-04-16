@@ -1,4 +1,11 @@
-from gendiff import *
+from gendiff import (
+    json_view,
+    make_diff,
+    parse_sh_args,
+    plain_view,
+    read_file,
+    stylish_view,
+)
 
 #
 
@@ -7,7 +14,7 @@ def generate_diff(file1, file2, format="stylish"):
     file1 = read_file(file1)
     file2 = read_file(file2)
 
-    result = diff(file1, file2)
+    result = make_diff(file1, file2)
 
     match format:
         case "stylish":
