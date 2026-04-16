@@ -1,106 +1,112 @@
 import itertools
-from collections import namedtuple
-
-Node = namedtuple("Node", ("key", "marker", "value"))
-Branch = namedtuple("Branch", ("key", "marker", "childrens"))
+import json
 
 
-# BEGIN
-def stringify(value, replacer=" ", spaces_count=1):
-    def iter_(current_value, depth):
-        if not isinstance(current_value, list):
-            return str(current_value)
+def stringify(value, replacer=".", spaces_count=1):
+    def iter_(current_value, depth, node_type):
+        if not isinstance(current_value, dict):
+            return current_value
 
         deep_indent_size = depth + spaces_count
         deep_indent = replacer * deep_indent_size
         current_indent = replacer * depth
         lines = []
-        for node in current_value:
-            lines.append(
-                f"{deep_indent}{node.key}{node.marker}: {iter_(node.value, deep_indent_size)}"
-            )
+        if not node_type:
+            for key, value_inner in current_value.items():
+                lines.append(
+                    f"{deep_indent} {key}: {iter_(value_inner, deep_indent_size, False)}"
+                )
+        else:
+            for key, value_inner in sorted(current_value.items()):
+                if value_inner["type"] == "option":
+                    match value_inner["status"]:
+                        case "added":
+                            lines.append(
+                                f"{deep_indent} + {key}: {iter_(value_inner['value'], deep_indent_size, False)}"
+                            )
+                        case "removed":
+                            lines.append(
+                                f"{deep_indent} - {key}: {iter_(value_inner['value'], deep_indent_size, False)}"
+                            )
+                        case "updated":
+                            lines.append(
+                                f"{deep_indent} - {key}: {iter_(value_inner['old_value'], deep_indent_size, False)}"
+                            )
+                            lines.append(
+                                f"{deep_indent} + {key}: {iter_(value_inner['new_value'], deep_indent_size, False)}"
+                            )
+                        case "same":
+                            lines.append(
+                                f"{deep_indent}   {key}: {iter_(value_inner['value'], deep_indent_size, False)}"
+                            )
+                else:
+                    lines.append(
+                        f"{deep_indent} {key}: {iter_(value_inner['childrens'], deep_indent_size, True)}"
+                    )
+
         result = itertools.chain("{", lines, [current_indent + "}"])
         return "\n".join(result)
 
-    return iter_(value, 0)
-
-
-# END
-#
-def booblik():
-    noob = {}
-    noob["vav"] = "nono"
-    print(noob["vav"])
-
-
-def noob(lol):
-    len(lol)
-
-
-dict1 = {
-    "opt1": "123",
-    "opt2": "lol",
-    "opt3": "lll",
-    "dict": {1: 2, 2: 3},
-    "dict2": {1: 2},
-}
-dict2 = {
-    "opt1": "113",
-    "opt2": "lol",
-    "opt3": "lll",
-    "dict": {1: 4, 2: 3},
-    "CUPUP": {1: 3, "sdt": 123, "sdf": {1: 1234}},
-}
-
-retult = {
-    ("opt1", "-"): "123",
-    ("opt1", "+"): "113",
-    ("opt2", " "): "lol",
-    ("opt3", " "): "lll",
-    ("dict", " "): {(1, "-"): 2},
-}
-
-
-def branch(node):
-    result = []
-    for key, value in node.items():
-        if isinstance(value, dict):
-            result.append(Node(key, "", branch(value)))
-        else:
-            result.append(Node(key, " ", value))
-    return result
+    return iter_(value, 0, True)
 
 
 def diff(dict1, dict2):
     keys = dict1.keys() | dict2.keys()
-    result = []
+    result = {}
     for key in keys:
-        match (dict1.get(key), dict2.get(key)):
-            case (dict(first), dict(second)):
-                result.append(Node(key, "   ", diff(first, second)))
-            case (dict(first), second) if not isinstance(second, dict):
-                result.append(Node(key, " - ", branch(first)))
-            case (first, dict(second)) if not isinstance(first, dict):
-                result.append(Node(key, " + ", branch(second)))
-            case (first, second) if first == second:
-                result.append(Node(key, "   ", first))
-            case (first, second) if first == None:
-                result.append(Node(key, " + ", first))
-            case (first, second) if second == None:
-                result.append(Node(key, " - ", first))
-            case (first, second) if first != None and first != second:
-                result.append(Node(key, " - ", first))
-                result.append(Node(key, " + ", second))
+        if key not in dict1:
+            result[key] = {"type": "option", "status": "added", "value": dict2[key]}
+        elif key not in dict2:
+            result[key] = {"type": "option", "status": "removed", "value": dict1[key]}
+        elif isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+            result[key] = {"type": "node", "childrens": diff(dict1[key], dict2[key])}
+        elif dict1[key] != dict2[key]:
+            result[key] = {
+                "type": "option",
+                "status": "updated",
+                "old_value": dict1[key],
+                "new_value": dict2[key],
+            }
+        else:
+            result[key] = {"type": "option", "status": "same", "value": dict1[key]}
+
     return result
 
 
 def main():
     print("Hello from sample-proj!")
-    booblik()
-    result = diff(dict1, dict2)
-    string_result = stringify(result, "--", 3)
-    print(string_result)
 
 
 if __name__ == "__main__":
     main()
+
+
+def return_complex_or_value(value):
+    return "[complex value]" if isinstance(value, dict) else f"'{value}'"
+
+
+def plain_view(diff_value, parent=""):
+    lines = []
+    parent_string = "" if parent == "" else parent + "."
+    for key, value_inner in sorted(diff_value.items()):
+        full_name = f"{parent_string}{key}"
+        if value_inner["type"] == "option":
+            # print(full_name)
+            match value_inner["status"]:
+                case "removed":
+                    lines.append(f"Property {full_name} was removed")
+                case "added":
+                    lines.append(
+                        f"Property {full_name} was added with value: {return_complex_or_value(value_inner['value'])}"
+                    )
+                case "updated":
+                    lines.append(
+                        f"Property {full_name} was updated. From {return_complex_or_value(value_inner['old_value'])} to {return_complex_or_value(value_inner['new_value'])}"
+                    )
+        else:
+            lines.append(plain_view(value_inner["childrens"], full_name))
+    return "\n".join(lines)
+
+
+def json_view(diff_value):
+    return json.dumps(diff_value, indent=4)
