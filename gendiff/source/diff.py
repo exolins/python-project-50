@@ -9,12 +9,13 @@ def stylish_view(value, replacer=" ", spaces_count=4):
 
         deep_indent_size = depth * spaces_count - 2
         deep_indent = replacer * deep_indent_size
-        current_indent = replacer * depth
+        not_node_indent = replacer * depth * spaces_count
+        current_indent = replacer * (spaces_count * (depth - 1) - 2)
         lines = []
         if not node_type:
             for key, value_inner in current_value.items():
                 lines.append(
-                    f"{deep_indent}  {key}: {iter_(value_inner, depth + 1, False)}"
+                    f"{not_node_indent}{key}: {iter_(value_inner, depth + 1, False)}"
                 )
         else:
             for key, value_inner in sorted(current_value.items()):
@@ -44,7 +45,7 @@ def stylish_view(value, replacer=" ", spaces_count=4):
                         f"{deep_indent}  {key}: {iter_(value_inner['childrens'], depth + 1, True)}"
                     )
 
-        result = itertools.chain("{", lines, [deep_indent + "  }"])
+        result = itertools.chain("{", lines, [current_indent + "  }"])
         return "\n".join(result)
 
     return iter_(value, 1, True)
