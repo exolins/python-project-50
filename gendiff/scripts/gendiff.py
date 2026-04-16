@@ -2,21 +2,12 @@ from gendiff import *
 #
 
 
-def main():
-    # print("Hello from python-project-50!")
+def generate_diff(file1, file2, format="stylish"):
+    file1 = read_file(file1)
+    file2 = read_file(file2)
 
-    args = parse_sh_args()
-    # print(args)
+    result = diff(file1, file2)
 
-    # print(args.first_file)
-    first_file = args.first_file
-    second_file = args.second_file
-
-    file1 = read_file(first_file)
-    file2 = read_file(second_file)
-
-    result = generate_diff(file1, file2)
-    format = args.format
     match format:
         case "stylish":
             return stylish_view(result)
@@ -26,6 +17,12 @@ def main():
             return json_view(result)
         case _:
             return f"'{format}' is unknown format of output"
-    # result_view = plain_view(result)
-    # print(result)
-    # return result_view
+
+
+def main():
+    args = parse_sh_args()
+    first_file = args.first_file
+    second_file = args.second_file
+
+    format = args.format
+    return generate_diff(first_file, second_file, format)

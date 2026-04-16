@@ -50,7 +50,7 @@ def stylish_view(value, replacer=" ", spaces_count=1):
     return iter_(value, 0, True)
 
 
-def generate_diff(dict1, dict2):
+def diff(dict1, dict2):
     keys = dict1.keys() | dict2.keys()
     result = {}
     for key in keys:
@@ -61,7 +61,7 @@ def generate_diff(dict1, dict2):
         elif isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
             result[key] = {
                 "type": "node",
-                "childrens": generate_diff(dict1[key], dict2[key]),
+                "childrens": diff(dict1[key], dict2[key]),
             }
         elif dict1[key] != dict2[key]:
             result[key] = {
