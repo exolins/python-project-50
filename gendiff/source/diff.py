@@ -13,36 +13,34 @@ def stylish_view(value, replacer=" ", spaces_count=4):
         current_indent = replacer * (spaces_count * (depth - 1) - 2)
         lines = []
         if not node_type:
-            for key, value_inner in current_value.items():
-                lines.append(
-                    f"{not_node_indent}{key}: {iter_(value_inner, depth + 1, False)}"
-                )
+            for key, val in current_value.items():
+                lines.append(f"{not_node_indent}{key}: {iter_(val, depth + 1, False)}")
         else:
-            for key, value_inner in sorted(current_value.items()):
-                if value_inner["type"] == "option":
-                    match value_inner["status"]:
+            for key, val in sorted(current_value.items()):
+                if val["type"] == "option":
+                    match val["status"]:
                         case "added":
                             lines.append(
-                                f"{deep_indent}+ {key}: {iter_(value_inner['value'], depth + 1, False)}"
+                                f"{deep_indent}+ {key}: {iter_(val['value'], depth + 1, False)}"
                             )
                         case "removed":
                             lines.append(
-                                f"{deep_indent}- {key}: {iter_(value_inner['value'], depth + 1, False)}"
+                                f"{deep_indent}- {key}: {iter_(val['value'], depth + 1, False)}"
                             )
                         case "updated":
                             lines.append(
-                                f"{deep_indent}- {key}: {iter_(value_inner['old_value'], depth + 1, False)}"
+                                f"{deep_indent}- {key}: {iter_(val['old_value'], depth + 1, False)}"
                             )
                             lines.append(
-                                f"{deep_indent}+ {key}: {iter_(value_inner['new_value'], depth + 1, False)}"
+                                f"{deep_indent}+ {key}: {iter_(val['new_value'], depth + 1, False)}"
                             )
                         case "same":
                             lines.append(
-                                f"{deep_indent}  {key}: {iter_(value_inner['value'], depth + 1, False)}"
+                                f"{deep_indent}  {key}: {iter_(val['value'], depth + 1, False)}"
                             )
                 else:
                     lines.append(
-                        f"{deep_indent}  {key}: {iter_(value_inner['childrens'], depth + 1, True)}"
+                        f"{deep_indent}  {key}: {iter_(val['childrens'], depth + 1, True)}"
                     )
 
         result = itertools.chain("{", lines, [current_indent + "  }"])
@@ -77,15 +75,7 @@ def diff(dict1, dict2):
     return result
 
 
-# def main():
-#     print("Hello from sample-proj!")
-
-
-# if __name__ == "__main__":
-#     main()
-
-
-def return_complex_or_value(value):
+def complex_val(value):
     return "[complex value]" if isinstance(value, dict) else f"'{value}'"
 
 
@@ -101,11 +91,14 @@ def plain_view(diff_value, parent=""):
                     lines.append(f"Property {full_name} was removed")
                 case "added":
                     lines.append(
-                        f"Property {full_name} was added with value: {return_complex_or_value(value_inner['value'])}"
+                        f"Property {full_name}"
+                        + f"was added with value: "
+                        + f"{complex_val(value_inner['value'])}"
                     )
                 case "updated":
                     lines.append(
-                        f"Property {full_name} was updated. From {return_complex_or_value(value_inner['old_value'])} to {return_complex_or_value(value_inner['new_value'])}"
+                        f"Property {full_name} was updated."
+                        + f" From {complex_val(value_inner['old_value'])} to {complex_val(value_inner['new_value'])}"
                     )
         else:
             lines.append(plain_view(value_inner["childrens"], full_name))

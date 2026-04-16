@@ -1,7 +1,7 @@
 # file_read
-from yaml import load, dump
-from yaml import Loader, Dumper
 import json
+
+from yaml import Dumper, Loader, dump, load
 
 YAML = (".yml", ".yaml")
 JSON = (".json", ".jsn")
