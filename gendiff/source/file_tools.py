@@ -26,10 +26,10 @@ def read_yaml(file_path):
         return data
     except yaml.YAMLError as e:
         print(f"Error parsing YAML: {e}", file=sys.stderr)
-        sys.exit(1234)
+        sys.exit(1)
     except FileNotFoundError as e:
         print(f"File not found: {e}", file=sys.stderr)
-        sys.exit(0)
+        sys.exit(1)
 
 
 # def dump_yaml(data):

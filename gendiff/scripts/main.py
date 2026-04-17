@@ -14,7 +14,11 @@ def generate_diff(file1, file2, format="stylish"):
     file1 = read_file(file1)
     file2 = read_file(file2)
 
-    result = make_diff(file1, file2)
+    try:
+        result = make_diff(file1, file2)
+
+    except Exception as e:
+        return "something wrong with make_diff"
 
     match format:
         case "stylish":
