@@ -1,5 +1,20 @@
+from types import NoneType
 import itertools
 import json
+
+
+def bool_hook(data):
+    if isinstance(data, bool):
+        return "true" if data else "false"
+    if isinstance(data, NoneType):
+        return "null"
+    return data
+
+
+def get_val(data, key):
+    if key in data:
+        return bool_hook(data[key])
+    return "ERROR"
 
 
 def stylish_view(value, replacer=" ", spaces_count=4):
@@ -21,26 +36,26 @@ def stylish_view(value, replacer=" ", spaces_count=4):
                     match val["status"]:
                         case "added":
                             lines.append(
-                                f"{d_i}+ {key}: {i_(val['value'], depth + 1, False)}"
+                                f"{d_i}+ {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
                             )
                         case "removed":
                             lines.append(
-                                f"{d_i}- {key}: {i_(val['value'], depth + 1, False)}"
+                                f"{d_i}- {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
                             )
                         case "updated":
                             lines.append(
-                                f"{d_i}- {key}: {i_(val['old_value'], depth + 1, False)}"
+                                f"{d_i}- {key}: {i_(get_val(val, 'old_value'), depth + 1, False)}"
                             )
                             lines.append(
-                                f"{d_i}+ {key}: {i_(val['new_value'], depth + 1, False)}"
+                                f"{d_i}+ {key}: {i_(get_val(val, 'new_value'), depth + 1, False)}"
                             )
                         case "same":
                             lines.append(
-                                f"{d_i}  {key}: {i_(val['value'], depth + 1, False)}"
+                                f"{d_i}  {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
                             )
                 else:
                     lines.append(
-                        f"{d_i}  {key}: {i_(val['childrens'], depth + 1, True)}"
+                        f"{d_i}  {key}: {i_(get_val(val, 'childrens'), depth + 1, True)}"
                     )
 
         result = itertools.chain("{", lines, [current_indent + "  }"])
@@ -76,7 +91,7 @@ def make_diff(dict1, dict2):
 
 
 def complex_val(value):
-    return "[complex value]" if isinstance(value, dict) else f"'{value}'"
+    return "[complex value]" if isinstance(value, dict) else f"'{bool_hook(value)}'"
 
 
 def plain_view(diff_value, parent=""):
