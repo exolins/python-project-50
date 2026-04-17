@@ -1,4 +1,5 @@
 # file_read
+from types import NoneType
 import json
 
 from yaml import Dumper, Loader, dump, load
@@ -11,6 +12,8 @@ def json_hook(data):
     for key, val in data.items():
         if isinstance(val, bool):
             data[key] = "true" if val else "false"
+        if isinstance(val, NoneType):
+            data[key] = "null"
     return data
 
 
