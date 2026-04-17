@@ -34,6 +34,7 @@ def stylish_view(value, replacer=" ", spaces_count=4):
 
         deep_indent_size = depth * spaces_count
         d_i = replacer * deep_indent_size
+        c_i = replacer * (depth - 1) * spaces_count
         # current_indent = replacer * (spaces_count * (depth - 1) - 2)
         lines = []
         if not node_type:
@@ -67,10 +68,10 @@ def stylish_view(value, replacer=" ", spaces_count=4):
                         f"{d_i[:-2]}  {key}: {i_(get_val(val, 'childrens'), depth + 1, True)}"
                     )
 
-        result = itertools.chain("{", lines, [d_i + "}"])
+        result = itertools.chain("{", lines, [c_i + "}"])
         return "\n".join(result)
 
-    return i_(value, 0, True)
+    return i_(value, 1, True)
 
 
 def make_diff(dict1, dict2):
