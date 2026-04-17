@@ -1,8 +1,9 @@
 # file_read
 from types import NoneType
 import json
-
-from yaml import Dumper, Loader, dump, load
+import yaml
+import sys
+# from yaml import Dumper, Loader, dump, load
 
 YAML = (".yml", ".yaml")
 JSON = (".json", ".jsn")
@@ -18,7 +19,18 @@ JSON = (".json", ".jsn")
 
 
 def read_yaml(file_path):
-    return load(open(file_path), Loader)
+    # return load(open(file_path), Loader)
+
+    try:
+        with open(file_path, "r") as f:
+            data = yaml.safe_load(f)
+        return data
+    except yaml.YAMLError as e:
+        print(f"Error parsing YAML: {e}", file=sys.stderr)
+        sys.exit(1)
+    except FileNotFoundError as e:
+        print(f"File not found: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 # def dump_yaml(data):
