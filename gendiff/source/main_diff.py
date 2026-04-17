@@ -58,7 +58,7 @@ def stylish_view(value, replacer=" ", spaces_count=4):
                         f"{d_i}  {key}: {i_(get_val(val, 'childrens'), depth + 1, True)}"
                     )
 
-        result = itertools.chain("{", lines, [current_indent + "  }"])
+        result = itertools.chain("{", lines, [current_indent + "}"])
         return "\n".join(result)
 
     return i_(value, 1, True)
