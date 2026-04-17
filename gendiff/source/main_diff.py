@@ -17,51 +17,60 @@ def get_val(data, key):
     return "ERROR"
 
 
+def stylish_line(indent_string, symbol, key, value):
+    result = [indent_string, symbol, key, ": ", value]
+    result.append(indent_string)
+    result.append(symbol)
+    result.append(key)
+    result.append(": ")
+    result.append(value)
+    return "".join([str[x] for x in result])
+
+
 def stylish_view(value, replacer=" ", spaces_count=4):
     def i_(current_value, depth, node_type):
         if not isinstance(current_value, dict):
-            return current_value
+            return bool_hook(current_value)
 
-        deep_indent_size = depth * spaces_count - 2
+        deep_indent_size = depth * spaces_count
         d_i = replacer * deep_indent_size
-        not_node_indent = replacer * depth * spaces_count
-        current_indent = replacer * (spaces_count * (depth - 1) - 2)
+        # current_indent = replacer * (spaces_count * (depth - 1) - 2)
         lines = []
         if not node_type:
             for key, val in current_value.items():
-                lines.append(f"{not_node_indent}{key}: {i_(val, depth + 1, False)}")
+                lines.append(f"{d_i}{key}: {i_(val, depth + 1, False)}")
         else:
             for key, val in sorted(current_value.items()):
                 if val["type"] == "option":
                     match val["status"]:
                         case "added":
                             lines.append(
-                                f"{d_i}+ {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
+                                f"{d_i[:-2]}+ {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
                             )
                         case "removed":
                             lines.append(
-                                f"{d_i}- {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
+                                f"{d_i[:-2]}- {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
                             )
                         case "updated":
                             lines.append(
-                                f"{d_i}- {key}: {i_(get_val(val, 'old_value'), depth + 1, False)}"
+                                f"{d_i[:-2]}- {key}: {i_(get_val(val, 'old_value'), depth + 1, False)}"
                             )
                             lines.append(
-                                f"{d_i}+ {key}: {i_(get_val(val, 'new_value'), depth + 1, False)}"
+                                f"{d_i[:-2]}+ {key}: {i_(get_val(val, 'new_value'), depth + 1, False)}"
                             )
                         case "same":
                             lines.append(
-                                f"{d_i}  {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
+                                f"{d_i[:-2]}  {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
                             )
                 else:
                     lines.append(
-                        f"{d_i}  {key}: {i_(get_val(val, 'childrens'), depth + 1, True)}"
+                        f"{d_i[:-2]}  {key}: {i_(get_val(val, 'childrens'), depth + 1, True)}"
                     )
 
-        result = itertools.chain("{", lines, [current_indent + "}"])
+        result = itertools.chain("{", lines, [d_i + "}"])
         return "\n".join(result)
 
-    return i_(value, 1, True)
+    return i_(value, 0, True)
 
 
 def make_diff(dict1, dict2):
