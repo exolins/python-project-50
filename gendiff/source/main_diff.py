@@ -101,7 +101,7 @@ def make_diff(dict1, dict2):
 
 
 def complex_val(value):
-    return "[complex value]" if isinstance(value, dict) else f"'{bool_hook(value)}'"
+    return "[complex value]" if isinstance(value, dict) else f"{bool_hook(value)}"
 
 
 def plain_view(diff_value, parent=""):
@@ -113,17 +113,17 @@ def plain_view(diff_value, parent=""):
             # print(full_name)
             match value_inner["status"]:
                 case "removed":
-                    lines.append(f"Property {full_name} was removed")
+                    lines.append(f"Property '{full_name}' was removed")
                 case "added":
                     lines.append(
-                        f"Property {full_name}"
+                        f"Property '{full_name}' "
                         + "was added with value: "
-                        + f"{complex_val(value_inner['value'])}"
+                        + f"'{complex_val(value_inner['value'])}'"
                     )
                 case "updated":
                     lines.append(
-                        f"Property {full_name} was updated."
-                        + f" From {complex_val(value_inner['old_value'])} to {complex_val(value_inner['new_value'])}"
+                        f"Property '{full_name}' was updated."
+                        + f" From '{complex_val(value_inner['old_value'])}' to '{complex_val(value_inner['new_value'])}'"
                     )
         else:
             lines.append(plain_view(value_inner["childrens"], full_name))
