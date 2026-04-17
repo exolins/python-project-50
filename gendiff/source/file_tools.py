@@ -1,5 +1,4 @@
 # file_read
-from types import NoneType
 import json
 import yaml
 import sys
@@ -27,10 +26,10 @@ def read_yaml(file_path):
         return data
     except yaml.YAMLError as e:
         print(f"Error parsing YAML: {e}", file=sys.stderr)
-        sys.exit(1)
+        sys.exit(1234)
     except FileNotFoundError as e:
         print(f"File not found: {e}", file=sys.stderr)
-        sys.exit(1)
+        sys.exit(0)
 
 
 # def dump_yaml(data):
