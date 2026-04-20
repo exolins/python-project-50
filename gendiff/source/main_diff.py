@@ -41,68 +41,66 @@ def stylish_view(value, replacer=" ", spaces_count=4):
                 lines.append(f"{d_i}{key}: {i_(val, depth + 1, False)}")
         else:
             for key, val in sorted(current_value.items()):
-                # lines.append(stylish_line(key, val, d_i, depth))
-                if val["type"] == "option":
-                    match val["status"]:
-                        case "added":
-                            lines.append(
-                                "%s+ %s: %s"
-                                % (
-                                    d_i[:-2],
-                                    key,
-                                    i_(get_val(val, "value"), depth + 1, False),
-                                )
-                            )
-                        case "removed":
-                            lines.append(
-                                "%s- %s: %s"
-                                % (
-                                    d_i[:-2],
-                                    key,
-                                    i_(get_val(val, "value"), depth + 1, False),
-                                )
-                            )
-                        case "updated":
-                            lines.append(
-                                "%s- %s: %s"
-                                % (
-                                    d_i[:-2],
-                                    key,
-                                    i_(
-                                        get_val(val, "old_value"),
-                                        depth + 1,
-                                        False,
-                                    ),
-                                )
-                            )
-                            lines.append(
-                                "%s+ %s: %s"
-                                % (
-                                    d_i[:-2],
-                                    key,
-                                    i_(
-                                        get_val(val, "new_value"),
-                                        depth + 1,
-                                        False,
-                                    ),
-                                )
-                            )
-                        case "same":
-                            lines.append(
-                                "%s  %s: %s"
-                                % (
-                                    d_i[:-2],
-                                    key,
-                                    i_(get_val(val, "value"), depth + 1, False),
-                                )
-                            )
-                else:
+                if val["type"] == "node":
                     lines.append(
                         "%s  %s: %s"
                         % (
                             d_i[:-2],
                             key,
                             i_(get_val(val, "childrens"), depth + 1, True),
+                        )
+                    )
+                elif val["status"] == "added":
+                    lines.append(
+                        "%s+ %s: %s"
+                        % (
+                            d_i[:-2],
+                            key,
+                            i_(get_val(val, "value"), depth + 1, False),
+                        )
+                    )
+
+                elif val["status"] == "removed":
+                    lines.append(
+                        "%s- %s: %s"
+                        % (
+                            d_i[:-2],
+                            key,
+                            i_(get_val(val, "value"), depth + 1, False),
+                        )
+                    )
+                elif val["status"] == "updated":
+                    lines.append(
+                        "%s- %s: %s"
+                        % (
+                            d_i[:-2],
+                            key,
+                            i_(
+                                get_val(val, "old_value"),
+                                depth + 1,
+                                False,
+                            ),
+                        )
+                    )
+                    lines.append(
+                        "%s+ %s: %s"
+                        % (
+                            d_i[:-2],
+                            key,
+                            i_(
+                                get_val(val, "new_value"),
+                                depth + 1,
+                                False,
+                            ),
+                        )
+                    )
+                else:
+                    lines.append(
+                        "%s  %s: %s"
+                        % (
+                            d_i[:-2],
+                            key,
+                            i_(get_val(val, "value"), depth + 1, False),
                         )
                     )
 
