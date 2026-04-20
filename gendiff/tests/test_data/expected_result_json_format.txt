@@ -1,0 +1,112 @@
+{
+    "common": {
+        "type": "node",
+        "childrens": {
+            "setting2": {
+                "type": "option",
+                "status": "removed",
+                "value": 200
+            },
+            "setting1": {
+                "type": "option",
+                "status": "same",
+                "value": "Value 1"
+            },
+            "setting5": {
+                "type": "option",
+                "status": "added",
+                "value": {
+                    "key5": "value5"
+                }
+            },
+            "setting4": {
+                "type": "option",
+                "status": "added",
+                "value": "blah blah"
+            },
+            "setting3": {
+                "type": "option",
+                "status": "updated",
+                "old_value": true,
+                "new_value": null
+            },
+            "setting6": {
+                "type": "node",
+                "childrens": {
+                    "doge": {
+                        "type": "node",
+                        "childrens": {
+                            "wow": {
+                                "type": "option",
+                                "status": "updated",
+                                "old_value": "value",
+                                "new_value": "so much"
+                            }
+                        }
+                    },
+                    "key": {
+                        "type": "option",
+                        "status": "same",
+                        "value": "value"
+                    },
+                    "ops": {
+                        "type": "option",
+                        "status": "added",
+                        "value": "vops"
+                    }
+                }
+            },
+            "follow": {
+                "type": "option",
+                "status": "added",
+                "value": false
+            }
+        }
+    },
+    "group2": {
+        "type": "option",
+        "status": "removed",
+        "value": {
+            "abc": 12345,
+            "deep": {
+                "id": 45
+            }
+        }
+    },
+    "group3": {
+        "type": "option",
+        "status": "added",
+        "value": {
+            "deep": {
+                "id": {
+                    "number": 45
+                }
+            },
+            "fee": 100500
+        }
+    },
+    "group1": {
+        "type": "node",
+        "childrens": {
+            "nest": {
+                "type": "option",
+                "status": "updated",
+                "old_value": {
+                    "key": "value"
+                },
+                "new_value": "str"
+            },
+            "foo": {
+                "type": "option",
+                "status": "same",
+                "value": "bar"
+            },
+            "baz": {
+                "type": "option",
+                "status": "updated",
+                "old_value": "bas",
+                "new_value": "bars"
+            }
+        }
+    }
+}
