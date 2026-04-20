@@ -1,71 +1,95 @@
 {
     "common": {
-        "type": "node",
         "childrens": {
-            "setting2": {
+            "follow": {
+                "status": "added",
                 "type": "option",
-                "status": "removed",
-                "value": 200
+                "value": false
             },
             "setting1": {
-                "type": "option",
                 "status": "same",
+                "type": "option",
                 "value": "Value 1"
             },
-            "setting5": {
+            "setting2": {
+                "status": "removed",
                 "type": "option",
+                "value": 200
+            },
+            "setting3": {
+                "new_value": null,
+                "old_value": true,
+                "status": "updated",
+                "type": "option"
+            },
+            "setting4": {
                 "status": "added",
+                "type": "option",
+                "value": "blah blah"
+            },
+            "setting5": {
+                "status": "added",
+                "type": "option",
                 "value": {
                     "key5": "value5"
                 }
             },
-            "setting4": {
-                "type": "option",
-                "status": "added",
-                "value": "blah blah"
-            },
-            "setting3": {
-                "type": "option",
-                "status": "updated",
-                "old_value": true,
-                "new_value": null
-            },
             "setting6": {
-                "type": "node",
                 "childrens": {
                     "doge": {
-                        "type": "node",
                         "childrens": {
                             "wow": {
-                                "type": "option",
-                                "status": "updated",
+                                "new_value": "so much",
                                 "old_value": "value",
-                                "new_value": "so much"
+                                "status": "updated",
+                                "type": "option"
                             }
-                        }
+                        },
+                        "type": "node"
                     },
                     "key": {
-                        "type": "option",
                         "status": "same",
+                        "type": "option",
                         "value": "value"
                     },
                     "ops": {
-                        "type": "option",
                         "status": "added",
+                        "type": "option",
                         "value": "vops"
                     }
-                }
-            },
-            "follow": {
-                "type": "option",
-                "status": "added",
-                "value": false
+                },
+                "type": "node"
             }
-        }
+        },
+        "type": "node"
+    },
+    "group1": {
+        "childrens": {
+            "baz": {
+                "new_value": "bars",
+                "old_value": "bas",
+                "status": "updated",
+                "type": "option"
+            },
+            "foo": {
+                "status": "same",
+                "type": "option",
+                "value": "bar"
+            },
+            "nest": {
+                "new_value": "str",
+                "old_value": {
+                    "key": "value"
+                },
+                "status": "updated",
+                "type": "option"
+            }
+        },
+        "type": "node"
     },
     "group2": {
-        "type": "option",
         "status": "removed",
+        "type": "option",
         "value": {
             "abc": 12345,
             "deep": {
@@ -74,8 +98,8 @@
         }
     },
     "group3": {
-        "type": "option",
         "status": "added",
+        "type": "option",
         "value": {
             "deep": {
                 "id": {
@@ -83,30 +107,6 @@
                 }
             },
             "fee": 100500
-        }
-    },
-    "group1": {
-        "type": "node",
-        "childrens": {
-            "nest": {
-                "type": "option",
-                "status": "updated",
-                "old_value": {
-                    "key": "value"
-                },
-                "new_value": "str"
-            },
-            "foo": {
-                "type": "option",
-                "status": "same",
-                "value": "bar"
-            },
-            "baz": {
-                "type": "option",
-                "status": "updated",
-                "old_value": "bas",
-                "new_value": "bars"
-            }
         }
     }
 }

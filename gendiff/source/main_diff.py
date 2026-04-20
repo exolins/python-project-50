@@ -194,4 +194,4 @@ def plain_view(diff_value, parent=""):
 
 
 def json_view(diff_value):
-    return json.dumps(diff_value, indent=4)
+    return json.dumps(diff_value, indent=4, sort_keys=True)
