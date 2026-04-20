@@ -1,9 +1,8 @@
 import pytest
 
-from gendiff.source.main_diff import make_diff
-
 # from gendiff.source.file_tools import read_file
 from gendiff import generate_diff
+from gendiff.source.main_diff import make_diff
 
 
 def read_file(file_path):
