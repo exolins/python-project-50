@@ -1,7 +1,9 @@
 # file_read
 import json
-import yaml
 import sys
+
+import yaml
+
 # from yaml import Dumper, Loader, dump, load
 
 YAML = (".yml", ".yaml")

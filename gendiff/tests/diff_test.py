@@ -1,6 +1,6 @@
 import pytest
 
-from gendiff import make_diff
+from gendiff.source.main_diff import make_diff
 
 param1 = ({}, {}, {})
 param2 = (
@@ -78,9 +78,17 @@ param7 = (
     {"lol": "value2", "new": {"nested": "value2"}},
     {
         "one": {"type": "option", "status": "removed", "value": "value1"},
-        "two": {"type": "option", "status": "removed", "value": {"nested": "value1"}},
+        "two": {
+            "type": "option",
+            "status": "removed",
+            "value": {"nested": "value1"},
+        },
         "lol": {"type": "option", "status": "added", "value": "value2"},
-        "new": {"type": "option", "status": "added", "value": {"nested": "value2"}},
+        "new": {
+            "type": "option",
+            "status": "added",
+            "value": {"nested": "value2"},
+        },
     },
 )
 

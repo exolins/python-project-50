@@ -1,6 +1,6 @@
-from types import NoneType
 import itertools
 import json
+from types import NoneType
 
 
 def bool_hook(data):
@@ -17,14 +17,14 @@ def get_val(data, key):
     return "ERROR"
 
 
-def stylish_line(indent_string, symbol, key, value):
-    result = [indent_string, symbol, key, ": ", value]
-    result.append(indent_string)
-    result.append(symbol)
-    result.append(key)
-    result.append(": ")
-    result.append(value)
-    return "".join([str[x] for x in result])
+# def stylish_line(indent_string, symbol, key, value):
+#     result = [indent_string, symbol, key, ": ", value]
+#     result.append(indent_string)
+#     result.append(symbol)
+#     result.append(key)
+#     result.append(": ")
+#     result.append(value)
+#     return "".join([str[x] for x in result])
 
 
 def stylish_view(value, replacer=" ", spaces_count=4):
@@ -35,37 +35,75 @@ def stylish_view(value, replacer=" ", spaces_count=4):
         deep_indent_size = depth * spaces_count
         d_i = replacer * deep_indent_size
         c_i = replacer * (depth - 1) * spaces_count
-        # current_indent = replacer * (spaces_count * (depth - 1) - 2)
         lines = []
         if not node_type:
             for key, val in current_value.items():
                 lines.append(f"{d_i}{key}: {i_(val, depth + 1, False)}")
         else:
             for key, val in sorted(current_value.items()):
+                # lines.append(stylish_line(key, val, d_i, depth))
                 if val["type"] == "option":
                     match val["status"]:
                         case "added":
                             lines.append(
-                                f"{d_i[:-2]}+ {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
+                                "%s+ %s: %s"
+                                % (
+                                    d_i[:-2],
+                                    key,
+                                    i_(get_val(val, "value"), depth + 1, False),
+                                )
                             )
                         case "removed":
                             lines.append(
-                                f"{d_i[:-2]}- {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
+                                "%s- %s: %s"
+                                % (
+                                    d_i[:-2],
+                                    key,
+                                    i_(get_val(val, "value"), depth + 1, False),
+                                )
                             )
                         case "updated":
                             lines.append(
-                                f"{d_i[:-2]}- {key}: {i_(get_val(val, 'old_value'), depth + 1, False)}"
+                                "%s- %s: %s"
+                                % (
+                                    d_i[:-2],
+                                    key,
+                                    i_(
+                                        get_val(val, "old_value"),
+                                        depth + 1,
+                                        False,
+                                    ),
+                                )
                             )
                             lines.append(
-                                f"{d_i[:-2]}+ {key}: {i_(get_val(val, 'new_value'), depth + 1, False)}"
+                                "%s+ %s: %s"
+                                % (
+                                    d_i[:-2],
+                                    key,
+                                    i_(
+                                        get_val(val, "new_value"),
+                                        depth + 1,
+                                        False,
+                                    ),
+                                )
                             )
                         case "same":
                             lines.append(
-                                f"{d_i[:-2]}  {key}: {i_(get_val(val, 'value'), depth + 1, False)}"
+                                "%s  %s: %s"
+                                % (
+                                    d_i[:-2],
+                                    key,
+                                    i_(get_val(val, "value"), depth + 1, False),
+                                )
                             )
                 else:
                     lines.append(
-                        f"{d_i[:-2]}  {key}: {i_(get_val(val, 'childrens'), depth + 1, True)}"
+                        "%s  %s: %s"
+                        % (
+                            d_i[:-2],
+                            key,
+                            i_(get_val(val, "childrens"), depth + 1, True),
+                        )
                     )
 
         result = itertools.chain("{", lines, [c_i + "}"])
@@ -79,9 +117,17 @@ def make_diff(dict1, dict2):
     result = {}
     for key in keys:
         if key not in dict1:
-            result[key] = {"type": "option", "status": "added", "value": dict2[key]}
+            result[key] = {
+                "type": "option",
+                "status": "added",
+                "value": dict2[key],
+            }
         elif key not in dict2:
-            result[key] = {"type": "option", "status": "removed", "value": dict1[key]}
+            result[key] = {
+                "type": "option",
+                "status": "removed",
+                "value": dict1[key],
+            }
         elif isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
             result[key] = {
                 "type": "node",
@@ -95,7 +141,11 @@ def make_diff(dict1, dict2):
                 "new_value": dict2[key],
             }
         else:
-            result[key] = {"type": "option", "status": "same", "value": dict1[key]}
+            result[key] = {
+                "type": "option",
+                "status": "same",
+                "value": dict1[key],
+            }
 
     return result
 
@@ -111,7 +161,9 @@ def plain_hook(data):
 
 
 def complex_val(value):
-    return "[complex value]" if isinstance(value, dict) else f"{plain_hook(value)}"
+    return (
+        "[complex value]" if isinstance(value, dict) else f"{plain_hook(value)}"
+    )
 
 
 def plain_view(diff_value, parent=""):
@@ -126,14 +178,17 @@ def plain_view(diff_value, parent=""):
                     lines.append(f"Property '{full_name}' was removed")
                 case "added":
                     lines.append(
-                        f"Property '{full_name}' "
-                        + "was added with value: "
-                        + f"{complex_val(value_inner['value'])}"
+                        "Property '%s' was added with value: %s"
+                        % (full_name, complex_val(value_inner["value"]))
                     )
                 case "updated":
                     lines.append(
-                        f"Property '{full_name}' was updated."
-                        + f" From {complex_val(value_inner['old_value'])} to {complex_val(value_inner['new_value'])}"
+                        "Property '%s' was updated. From %s to %s"
+                        % (
+                            full_name,
+                            complex_val(value_inner["old_value"]),
+                            complex_val(value_inner["new_value"]),
+                        ),
                     )
         else:
             lines.append(plain_view(value_inner["childrens"], full_name))
