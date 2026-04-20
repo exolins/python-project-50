@@ -37,4 +37,4 @@ def main():
     second_file = args.second_file
 
     format = args.format
-    return generate_diff(first_file, second_file, format)
+    print(generate_diff(first_file, second_file, format))
