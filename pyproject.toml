@@ -28,7 +28,7 @@ gendiff = "gendiff.scripts.main:main"
 [tool.pytest.ini_options]
 
 minversion = "6.0"
-testpaths = ["gendiff/tests"]
+testpaths = ["tests"]
 python_files = "test_*.py *_test.py"
 python_functions = "test_*"
 addopts = [

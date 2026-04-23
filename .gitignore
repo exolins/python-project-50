@@ -2,3 +2,6 @@
 __pycache__
 dist/
 *.cast
+.envrc
+.coverage
+coverage.xml

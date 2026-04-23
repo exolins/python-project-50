@@ -17,16 +17,6 @@ def get_val(data, key):
     return "ERROR"
 
 
-# def stylish_line(indent_string, symbol, key, value):
-#     result = [indent_string, symbol, key, ": ", value]
-#     result.append(indent_string)
-#     result.append(symbol)
-#     result.append(key)
-#     result.append(": ")
-#     result.append(value)
-#     return "".join([str[x] for x in result])
-
-
 def stylish_view(value, replacer=" ", spaces_count=4):
     def i_(current_value, depth, node_type):
         if not isinstance(current_value, dict):

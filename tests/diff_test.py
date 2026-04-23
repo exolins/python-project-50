@@ -2,7 +2,7 @@ import pytest
 
 # from gendiff.source.file_tools import read_file
 from gendiff import generate_diff
-from gendiff.source.main_diff import make_diff
+from gendiff.formatters.main_diff import make_diff
 
 
 def read_file(file_path):
@@ -113,14 +113,14 @@ def test_diff(data1, data2, data_result):
     "file_path1, file_path2, expected_result",
     [
         (
-            "gendiff/tests/test_data/file1.json",
-            "gendiff/tests/test_data/file2.json",
-            "gendiff/tests/test_data/expected_result_json.txt",
+            "tests/test_data/file1.json",
+            "tests/test_data/file2.json",
+            "tests/test_data/expected_result_json.txt",
         ),
         (
-            "gendiff/tests/test_data/file1.yaml",
-            "gendiff/tests/test_data/file2.yaml",
-            "gendiff/tests/test_data/expected_result_yaml.txt",
+            "tests/test_data/file1.yaml",
+            "tests/test_data/file2.yaml",
+            "tests/test_data/expected_result_yaml.txt",
         ),
     ],
 )
@@ -134,14 +134,14 @@ def test_generate_diff(file_path1, file_path2, expected_result):
     "file_path1, file_path2, expected_result",
     [
         (
-            "gendiff/tests/test_data/file1.json",
-            "gendiff/tests/test_data/file2.json",
-            "gendiff/tests/test_data/expected_result_plain.txt",
+            "tests/test_data/file1.json",
+            "tests/test_data/file2.json",
+            "tests/test_data/expected_result_plain.txt",
         ),
         (
-            "gendiff/tests/test_data/file1.yaml",
-            "gendiff/tests/test_data/file2.yaml",
-            "gendiff/tests/test_data/expected_result_plain.txt",
+            "tests/test_data/file1.yaml",
+            "tests/test_data/file2.yaml",
+            "tests/test_data/expected_result_plain.txt",
         ),
     ],
 )
@@ -155,14 +155,14 @@ def test_generate_diff_plain(file_path1, file_path2, expected_result):
     "file_path1, file_path2, expected_result",
     [
         (
-            "gendiff/tests/test_data/file1.json",
-            "gendiff/tests/test_data/file2.json",
-            "gendiff/tests/test_data/expected_result_json_format.txt",
+            "tests/test_data/file1.json",
+            "tests/test_data/file2.json",
+            "tests/test_data/expected_result_json_format.txt",
         ),
         (
-            "gendiff/tests/test_data/file1.yaml",
-            "gendiff/tests/test_data/file2.yaml",
-            "gendiff/tests/test_data/expected_result_json_format.txt",
+            "tests/test_data/file1.yaml",
+            "tests/test_data/file2.yaml",
+            "tests/test_data/expected_result_json_format.txt",
         ),
     ],
 )

@@ -1,5 +1,5 @@
-from gendiff.source.file_tools import read_file
-from gendiff.source.main_diff import (
+from gendiff.formatters.file_tools import read_file
+from gendiff.formatters.main_diff import (
     json_view,
     make_diff,
     plain_view,
