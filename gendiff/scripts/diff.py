@@ -1,10 +1,9 @@
-from gendiff.formatters.file_tools import read_file
-from gendiff.formatters.main_diff import (
-    json_view,
-    make_diff,
-    plain_view,
-    stylish_view,
-)
+
+from gendiff.formatters.json_format import json_view
+from gendiff.formatters.plain import plain_view
+from gendiff.formatters.stylish import stylish_view
+from gendiff.scripts.file_tools import read_file
+from gendiff.scripts.make_diff import make_diff
 
 
 def generate_diff(file1, file2, format="stylish"):

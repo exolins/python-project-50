@@ -4,7 +4,6 @@ import sys
 
 import yaml
 
-
 YAML = (".yml", ".yaml")
 JSON = (".json", ".jsn")
 
